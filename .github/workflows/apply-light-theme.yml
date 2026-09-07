@@ -1,0 +1,303 @@
+name: Apply approved light theme
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/apply-light-theme.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply-theme:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Apply light visual theme
+        shell: python
+        run: |
+          from pathlib import Path
+
+          path = Path('index.html')
+          html = path.read_text(encoding='utf-8')
+          marker = '/* LIGHT_THEME_DEPLOYED_2026 */'
+          if marker in html:
+              print('Light theme already applied.')
+              raise SystemExit(0)
+
+          theme = r'''
+          /* LIGHT_THEME_DEPLOYED_2026 */
+          :root{
+            --bg:#F4F7FB;
+            --panel:#FFFFFF;
+            --panel2:#EEF3FA;
+            --text:#10233F;
+            --muted:#53657A;
+            --line:#DCE5EF;
+            --blue:#2F6BFF;
+            --blue2:#4D84FF;
+            --green:#1E9E68;
+            --red:#C71920;
+            --shadow:0 18px 48px rgba(31,62,96,.09)
+          }
+          body{
+            background:#F4F7FB !important;
+            color:#10233F !important
+          }
+          .topbar{
+            background:rgba(255,255,255,.96) !important;
+            border-bottom:1px solid #DCE5EF !important;
+            box-shadow:0 4px 18px rgba(31,62,96,.035)
+          }
+          .brand{color:#10233F !important}
+          .brand small{color:#708298 !important}
+          .nav a{
+            color:#334A64 !important;
+            border-color:#DCE5EF !important;
+            background:#fff !important
+          }
+          .hero{
+            background:radial-gradient(720px 360px at 88% 10%,rgba(47,107,255,.10),transparent 66%),linear-gradient(180deg,#FAFCFF,#F4F7FB) !important
+          }
+          .eyebrow{
+            color:#2F6BFF !important;
+            border-color:#CBD9F3 !important;
+            background:#F0F5FF !important
+          }
+          .kicker{color:#2F6BFF !important}
+          .hero-copy,.lead{color:#53657A !important}
+          .hero-copy strong{color:#10233F !important}
+          .hero-benefit-line{color:#2F435C !important}
+          .chip{
+            color:#354C66 !important;
+            border-color:#D5E0ED !important;
+            background:#fff !important
+          }
+          .secondary{
+            color:#25415F !important;
+            background:#fff !important;
+            border-color:#C9D7E7 !important
+          }
+          .photo-wrap{
+            border-color:#C7D6E8 !important;
+            background:linear-gradient(145deg,#E9F0F8,#DCE7F2) !important;
+            box-shadow:0 18px 48px rgba(31,62,96,.10) !important
+          }
+          .photo-fallback{color:#8BA8CE !important}
+          .photo-loading{color:#74879E !important}
+          .photo-label{
+            color:#fff !important;
+            background:rgba(11,31,58,.94) !important;
+            border-color:rgba(255,255,255,.14) !important
+          }
+          .photo-label span{color:#CCD8E7 !important}
+          .benefit-strip{background:#F4F7FB !important}
+          .benefit-card{
+            background:#fff !important;
+            border-color:#DCE5EF !important;
+            box-shadow:0 8px 22px rgba(31,62,96,.04) !important
+          }
+          .benefit-card span{color:#53657A !important}
+
+          .solutions{
+            background:#fff !important;
+            color:#10233F !important
+          }
+          .solutions .lead{color:#53657A !important}
+          .solution-card{
+            background:#fff !important;
+            border-color:#DCE5EF !important;
+            box-shadow:0 10px 28px rgba(31,62,96,.06) !important
+          }
+          .proposal-no{color:#7A8EA6 !important}
+          .service-label{
+            color:#2F6BFF !important;
+            background:#EEF4FF !important;
+            border-color:#CCDBFA !important
+          }
+          .solution-card h3{color:#10233F !important}
+          .solution-when,.solution-card ul{color:#52677D !important}
+          .solution-price{color:#2F6BFF !important}
+          .solution-price small{color:#6E8197 !important}
+          .solution-link{color:#2F6BFF !important}
+          .detail-intro{border-color:#D7E2EE !important}
+          .detail-card{
+            background:#FDFEFF !important;
+            border-color:#D7E2EE !important;
+            box-shadow:none !important
+          }
+          .detail-head{border-color:#E1E9F2 !important}
+          .detail-head small{color:#7B8EA5 !important}
+          .detail-head h3{color:#10233F !important}
+          .detail-price{color:#2F6BFF !important}
+          .field{
+            background:#F7F9FC !important;
+            border-color:#DDE6EF !important
+          }
+          .field b{color:#10233F !important}
+          .field p{color:#52677D !important}
+          .example{
+            background:#EEF4FF !important;
+            border-color:#CCDDFB !important
+          }
+          .example span{color:#2F6BFF !important}
+          .example p{color:#324A65 !important}
+          .combine{
+            background:#F0FBF6 !important;
+            border-color:#BFE2D2 !important
+          }
+          .combine b{color:#143E2E !important}
+          .combine span{color:#526E62 !important}
+
+          .academy-section{
+            background:#0B1F3A !important;
+            color:#fff !important
+          }
+          .academy-section h2,.academy-section h3{color:#fff !important}
+          .academy-section .lead{color:#C3D0E0 !important}
+          .academy-section .kicker{color:#AFC5FF !important}
+          .academy-card{
+            background:linear-gradient(145deg,#102B50,#0B1F3A) !important;
+            border-color:rgba(255,255,255,.13) !important;
+            color:#fff !important
+          }
+          .academy-card p{color:#C5D1DF !important}
+          .feature{
+            color:#E2E8F1 !important;
+            background:rgba(255,255,255,.05) !important;
+            border-color:rgba(255,255,255,.13) !important
+          }
+          .license-box{
+            background:#fff !important;
+            color:#10233F !important;
+            border-color:#DCE5EF !important;
+            box-shadow:0 18px 48px rgba(0,0,0,.12) !important
+          }
+          .license-box small{color:#5A7088 !important}
+          .license-box p{color:#53657A !important}
+          .fixed-price{color:#2F6BFF !important}
+          .price-examples div{
+            background:#F7F9FB !important;
+            border-color:#DCE5EF !important;
+            color:#10233F !important
+          }
+
+          .budget-section{background:#EEF3FA !important}
+          .budget-card{
+            background:#fff !important;
+            color:#10233F !important;
+            border-color:#DCE5EF !important;
+            box-shadow:0 18px 48px rgba(31,62,96,.08) !important
+          }
+          .budget-head p{color:#53657A !important}
+          .step{
+            background:#F8FAFB !important;
+            border-color:#DFE7EC !important
+          }
+          .summary{background:#17344E !important;color:#fff !important}
+          .comparison{background:#F7F9FA !important}
+
+          main>section:nth-of-type(5){
+            background:#fff !important;
+            color:#10233F !important
+          }
+          main>section:nth-of-type(5) .lead{color:#53657A !important}
+          .process-card{
+            background:#fff !important;
+            border-color:#D9E3ED !important
+          }
+          .process-card b{color:#10233F !important}
+          .process-card p{color:#53657A !important}
+
+          .authority-section{
+            background:#0B1F3A !important;
+            color:#fff !important
+          }
+          .authority-section h2,.authority-section h3{color:#fff !important}
+          .authority-section .lead{color:#C3D0E0 !important}
+          .authority-section .kicker{color:#AFC5FF !important}
+          .teacher-panel,.youtube-panel{
+            background:linear-gradient(145deg,#102B50,#0B1F3A) !important;
+            border-color:rgba(255,255,255,.13) !important;
+            color:#fff !important
+          }
+          .teacher-panel p,.youtube-panel p{color:#C4D1E0 !important}
+          .teacher-list div,.channel-benefits div{
+            background:rgba(255,255,255,.04) !important;
+            border-color:rgba(255,255,255,.13) !important;
+            color:#E0E7F0 !important
+          }
+          .channel-benefits span{color:#C0CDDD !important}
+          .youtube-head span{color:#C1CDDC !important}
+          .youtube-btn{background:#fff !important;color:#0B1F3A !important}
+
+          .testimonials-section{
+            background:#EEF3FA !important;
+            color:#10233F !important
+          }
+          .testimonials-section h2{color:#10233F !important}
+          .testimonials-section .lead{color:#53657A !important}
+          .testimonial-card{
+            background:#fff !important;
+            border-color:#D7E2EE !important;
+            box-shadow:0 12px 30px rgba(31,62,96,.06) !important
+          }
+          .testimonial-caption small{color:#2F6BFF !important}
+          .testimonial-caption b{color:#10233F !important}
+          .testimonials-note{color:#74869A !important}
+
+          .faq-section{
+            background:#fff !important;
+            color:#10233F !important
+          }
+          .faq-section h2{color:#10233F !important}
+          .faq-heading .lead{color:#53657A !important}
+          .faq-help{
+            color:#355A9E !important;
+            background:#EEF4FF !important;
+            border-color:#CCDDFB !important
+          }
+          .faq details{
+            background:#fff !important;
+            border-color:#D8E3ED !important
+          }
+          .faq summary{color:#10233F !important}
+          .faq-answer{color:#53657A !important}
+
+          main>section:nth-of-type(9){background:#EEF3FA !important}
+          .final{
+            color:#fff !important;
+            background:linear-gradient(145deg,#102B50,#0B1F3A) !important;
+            border-color:rgba(255,255,255,.08) !important
+          }
+          .final h2{color:#fff !important}
+          .final .kicker{color:#AFC5FF !important}
+          .final p{color:#C7D3E0 !important}
+          footer{
+            background:#fff !important;
+            color:#74869A !important;
+            border-color:#DCE5EF !important
+          }
+          '''
+
+          html = html.replace('<meta name="theme-color" content="#010817">', '<meta name="theme-color" content="#F4F7FB">')
+          if '</style>' not in html:
+              raise RuntimeError('Closing style tag not found')
+          html = html.replace('</style>', theme + '\n</style>', 1)
+          path.write_text(html, encoding='utf-8')
+          print('Approved light theme inserted.')
+      - name: Commit updated page
+        run: |
+          if git diff --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Deploy approved light visual theme"
+          git push
