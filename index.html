@@ -262,14 +262,151 @@ footer{
   border-color:#DCE5EF !important
 }
 
+
+/* B2B_BENEFITS_AND_COLORS_2026 */
+
+/* Checklist de benefícios empresariais na primeira dobra */
+.hero-checklist{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px 12px;
+  margin:20px 0 4px;
+  max-width:780px
+}
+.hero-check-item{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  padding:11px 12px;
+  border:1px solid #DCE5EF;
+  border-radius:13px;
+  background:rgba(255,255,255,.92);
+  box-shadow:0 6px 18px rgba(31,62,96,.035)
+}
+.hero-check-item:last-child{grid-column:1/-1}
+.hero-check{
+  flex:0 0 25px;
+  width:25px;
+  height:25px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:#EAF7F1;
+  color:#178A5B;
+  font-size:.82rem;
+  font-weight:1000;
+  margin-top:1px
+}
+.hero-check-item b{
+  display:block;
+  color:#10233F;
+  font-size:.83rem;
+  line-height:1.35;
+  margin-bottom:2px
+}
+.hero-check-item small{
+  display:block;
+  color:#5A6D82;
+  font-size:.72rem;
+  line-height:1.42
+}
+.hero-benefit-line{
+  max-width:770px;
+  color:#334B65 !important;
+  font-weight:760 !important;
+  line-height:1.55
+}
+
+/* Identidade cromática das quatro propostas */
+.solution-card:nth-child(1),.detail-card:nth-child(1){--proposal-accent:#2F6BFF;--proposal-soft:#F2F6FF;--proposal-border:#C8D9FF}
+.solution-card:nth-child(2),.detail-card:nth-child(2){--proposal-accent:#008FB5;--proposal-soft:#EFFBFD;--proposal-border:#BCE8F1}
+.solution-card:nth-child(3),.detail-card:nth-child(3){--proposal-accent:#1E9E68;--proposal-soft:#F0FAF5;--proposal-border:#C5E7D6}
+.solution-card:nth-child(4),.detail-card:nth-child(4){--proposal-accent:#7656C9;--proposal-soft:#F6F2FF;--proposal-border:#DCCFFA}
+
+.solution-card{
+  min-height:0 !important;
+  background:linear-gradient(180deg,var(--proposal-soft) 0%,#FFFFFF 58%) !important;
+  border:1px solid var(--proposal-border) !important;
+  border-top:4px solid var(--proposal-accent) !important;
+  box-shadow:0 10px 28px rgba(31,62,96,.055) !important
+}
+.solution-when{min-height:0 !important;margin-bottom:10px !important}
+.solution-card .service-label{
+  color:var(--proposal-accent) !important;
+  background:var(--proposal-soft) !important;
+  border-color:var(--proposal-border) !important
+}
+.solution-card .solution-price,
+.solution-card .solution-link{color:var(--proposal-accent) !important}
+.solution-card .solution-price{margin-top:3px !important}
+.solution-card ul{margin-bottom:10px !important}
+.solution-card .solution-link{margin-top:8px !important}
+
+.detail-card{
+  background:linear-gradient(180deg,var(--proposal-soft) 0%,#FFFFFF 38%) !important;
+  border-color:var(--proposal-border) !important;
+  border-top:4px solid var(--proposal-accent) !important
+}
+.detail-card .detail-tag{
+  background:var(--proposal-accent) !important;
+  color:#fff !important
+}
+.detail-card .detail-price{color:var(--proposal-accent) !important}
+.detail-card .example{
+  background:var(--proposal-soft) !important;
+  border-color:var(--proposal-border) !important
+}
+.detail-card .example span{color:var(--proposal-accent) !important}
+
+/* Mesma linguagem cromática dentro do simulador */
+.step:nth-child(2){--step-accent:#2F6BFF;--step-soft:#F2F6FF;--step-border:#C8D9FF}
+.step:nth-child(3){--step-accent:#008FB5;--step-soft:#EFFBFD;--step-border:#BCE8F1}
+.step:nth-child(4){--step-accent:#1E9E68;--step-soft:#F0FAF5;--step-border:#C5E7D6}
+.step:nth-child(5){--step-accent:#7656C9;--step-soft:#F6F2FF;--step-border:#DCCFFA}
+.step:nth-child(n+2){
+  border-color:var(--step-border) !important;
+  border-left:4px solid var(--step-accent) !important;
+  background:linear-gradient(90deg,var(--step-soft),#F8FAFB 32%) !important
+}
+.step:nth-child(n+2) .step-number{background:var(--step-accent) !important}
+
+.summary .budget-line{position:relative;padding-left:14px !important}
+.summary .budget-line::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:10px;
+  bottom:10px;
+  width:4px;
+  border-radius:999px;
+  background:#7890A5
+}
+.summary .budget-line:has(#academySubtotal)::before{background:#2F6BFF}
+.summary .budget-line:has(#liveSubtotal)::before{background:#008FB5}
+.summary .budget-line:has(#presentialSubtotal)::before{background:#1E9E68}
+.summary .budget-line:has(#exclusiveSubtotal)::before{background:#7656C9}
+
+@media(max-width:700px){
+  .hero-checklist{grid-template-columns:1fr}
+  .hero-check-item:last-child{grid-column:auto}
+}
+
 </style>
 </head>
 <body>
 <header class="topbar"><div class="container inner"><a class="brand" href="#top"><div class="logo">MPC</div><div>Prof. Lucas MPC<small>PROPOSTAS E PARCERIAS</small></div></a><nav class="nav"><a href="#solucoes">Soluções</a><a href="#orcamento">Orçamento</a><a href="#canal">Canal</a><a href="#depoimentos">Depoimentos</a><a href="#faq">FAQ</a></nav></div></header>
 <main id="top">
-<section class="hero"><div class="container hero-grid"><div><div class="eyebrow">Solução de Matemática para cursos preparatórios</div><h1>Ofereça Matemática completa aos seus alunos <em>sem precisar montar tudo do zero.</em></h1><p class="hero-copy">Academia pronta, aulas online, aulas presenciais e produção exclusiva com o <strong>Prof. Lucas MPC</strong>. Você escolhe o formato que faz sentido para sua turma e controla o investimento.</p><div class="hero-benefit-line">Mais estrutura para o aluno. Mais flexibilidade para o curso. Menos complexidade para começar.</div><div class="proof-chips"><span class="chip">15+ anos ensinando Matemática</span><span class="chip">R$ 25 por aluno na Academia</span><span class="chip">Formato online ou presencial</span></div><div class="ctas"><a class="btn primary" href="#orcamento">MONTAR ORÇAMENTO</a><a class="btn secondary" id="waHero" target="_blank">CONVERSAR SOBRE PARCERIA</a></div></div><div class="photo-card"><div class="photo-wrap"><div class="photo-fallback" id="photoFallback">MPC</div><div class="photo-loading" id="photoLoading">Carregando foto do Prof. Lucas...</div><img id="heroPhoto" alt="Prof. Lucas MPC" style="display:none"></div><div class="photo-label"><b>Prof. Lucas MPC</b><span>Professor de Matemática para concursos públicos</span></div></div></div></section>
+<section class="hero"><div class="container hero-grid"><div><div class="eyebrow">Solução de Matemática para cursos preparatórios</div><h1>Ofereça Matemática completa aos seus alunos <em>sem precisar montar tudo do zero.</em></h1><p class="hero-copy">Academia pronta, aulas online, aulas presenciais e produção exclusiva com o <strong>Prof. Lucas MPC</strong>. Você escolhe o formato que faz sentido para sua turma e controla o investimento.</p><div class="hero-benefit-line">Melhore a entrega ao aluno, fortaleça o resultado da turma e aumente o potencial de rentabilidade do seu curso — sem precisar montar uma nova estrutura de Matemática.</div><div class="hero-checklist" aria-label="Benefícios para o curso">
+  <div class="hero-check-item"><span class="hero-check">✓</span><div><b>Mais praticidade</b><small>Matemática pronta sem montar uma estrutura do zero.</small></div></div>
+  <div class="hero-check-item"><span class="hero-check">✓</span><div><b>Mais economia</b><small>Reduza o custo para oferecer Matemática à sua turma.</small></div></div>
+  <div class="hero-check-item"><span class="hero-check">✓</span><div><b>Mais margem e potencial de lucro</b><small>Eleve o valor entregue sem aumentar os custos na mesma proporção.</small></div></div>
+  <div class="hero-check-item"><span class="hero-check">✓</span><div><b>Mais valor percebido</b><small>Fortaleça a proposta do curso aos olhos dos seus alunos.</small></div></div>
+  <div class="hero-check-item"><span class="hero-check">✓</span><div><b>Mais preparo para aprovações</b><small>Reforce a preparação com aulas, questões, revisões e conteúdo direcionado.</small></div></div>
+  <div class="hero-check-item"><span class="hero-check">✓</span><div><b>Mais flexibilidade</b><small>Comece pequeno e amplie a parceria conforme a demanda.</small></div></div>
+  <div class="hero-check-item"><span class="hero-check">✓</span><div><b>Mais diferencial competitivo</b><small>Ofereça uma estrutura de Matemática capaz de valorizar sua preparação.</small></div></div>
+</div><div class="ctas"><a class="btn primary" href="#orcamento">MONTAR ORÇAMENTO</a><a class="btn secondary" id="waHero" target="_blank">CONVERSAR SOBRE PARCERIA</a></div></div><div class="photo-card"><div class="photo-wrap"><div class="photo-fallback" id="photoFallback">MPC</div><div class="photo-loading" id="photoLoading">Carregando foto do Prof. Lucas...</div><img id="heroPhoto" alt="Prof. Lucas MPC" style="display:none"></div><div class="photo-label"><b>Prof. Lucas MPC</b><span>Professor de Matemática para concursos públicos</span></div></div></div></section>
 <section class="benefit-strip"><div class="container benefit-grid"><div class="benefit-card"><b>Estrutura pronta para começar</b><span>O curso pode adicionar Matemática sem precisar criar uma operação completa do zero.</span></div><div class="benefit-card"><b>Investimento flexível</b><span>Academia por aluno, aulas por hora e produção exclusiva conforme a necessidade.</span></div><div class="benefit-card"><b>Trabalho público para avaliar</b><span>Canal, aulas e depoimentos permitem conhecer a didática antes de fechar a parceria.</span></div></div></section>
-<section class="solutions" id="solucoes"><div class="container"><div class="section-head"><div class="kicker">Possibilidades de parceria</div><h2>Escolha uma solução ou combine várias.</h2><p class="lead">O cursinho não precisa contratar um pacote fechado. A parceria pode começar pelo formato que faça sentido para a turma atual.</p></div><div class="solution-grid"><article class="solution-card"><div class="proposal-no">PROPOSTA 01</div><div class="service-label">ACADEMIA</div><h3>Academia da Matemática</h3><p class="solution-when"><b>Indicado quando:</b> o curso quer acrescentar uma estrutura completa de Matemática aos seus alunos.</p><div class="solution-price">R$ 25<small>por aluno • 6 meses</small></div><ul><li>Acesso individual</li><li>Preço único em qualquer quantidade</li><li>Conteúdo voltado para concursos</li></ul><a class="solution-link" href="#detalhe-academia">Ver proposta completa →</a></article><article class="solution-card"><div class="proposal-no">PROPOSTA 02</div><div class="service-label">ONLINE</div><h3>Aulas online</h3><p class="solution-when"><b>Indicado quando:</b> a empresa precisa de aulas, revisões ou encontros ao vivo sem presença física.</p><div class="solution-price">R$ 80<small>por hora</small></div><ul><li>Aulas direcionadas ao edital</li><li>Revisões e resolução de questões</li><li>Carga horária flexível</li></ul><a class="solution-link" href="#detalhe-online">Ver proposta completa →</a></article><article class="solution-card"><div class="proposal-no">PROPOSTA 03</div><div class="service-label">PRESENCIAL</div><h3>Aulas presenciais</h3><p class="solution-when"><b>Indicado quando:</b> o curso quer o professor presencialmente em aula, revisão, aulão ou evento.</p><div class="solution-price">R$ 70<small>por hora-aula</small></div><ul><li>Aula na unidade parceira</li><li>Conteúdo direcionado</li><li>Ideal para revisão e intensivo</li></ul><a class="solution-link" href="#detalhe-presencial">Ver proposta completa →</a></article><article class="solution-card"><div class="proposal-no">PROPOSTA 04</div><div class="service-label">EXCLUSIVO</div><h3>Curso exclusivo</h3><p class="solution-when"><b>Indicado quando:</b> a empresa deseja ter conteúdo de Matemática produzido especificamente para seu projeto.</p><div class="solution-price">R$ 120<small>por hora produzida</small></div><ul><li>Escopo definido em conjunto</li><li>Conteúdo por edital ou projeto</li><li>Licença de uso combinada</li></ul><a class="solution-link" href="#detalhe-exclusivo">Ver proposta completa →</a></article></div>
+<section class="solutions" id="solucoes"><div class="container"><div class="section-head"><div class="kicker">Possibilidades de parceria</div><h2>Quatro formas de levar Matemática para sua operação.</h2><p class="lead">Contrate uma solução isoladamente ou combine formatos. A parceria pode começar pequena e crescer junto com a demanda da sua turma.</p></div><div class="solution-grid"><article class="solution-card"><div class="proposal-no">PROPOSTA 01</div><div class="service-label">ACADEMIA</div><h3>Academia da Matemática</h3><p class="solution-when"><b>Indicado quando:</b> o curso quer acrescentar uma estrutura completa de Matemática aos seus alunos.</p><div class="solution-price">R$ 25<small>por aluno • 6 meses</small></div><ul><li>Acesso individual</li><li>Preço único em qualquer quantidade</li><li>Conteúdo voltado para concursos</li></ul><a class="solution-link" href="#detalhe-academia">Ver proposta completa →</a></article><article class="solution-card"><div class="proposal-no">PROPOSTA 02</div><div class="service-label">ONLINE</div><h3>Aulas online</h3><p class="solution-when"><b>Indicado quando:</b> a empresa precisa de aulas, revisões ou encontros ao vivo sem presença física.</p><div class="solution-price">R$ 80<small>por hora</small></div><ul><li>Aulas direcionadas ao edital</li><li>Revisões e resolução de questões</li><li>Carga horária flexível</li></ul><a class="solution-link" href="#detalhe-online">Ver proposta completa →</a></article><article class="solution-card"><div class="proposal-no">PROPOSTA 03</div><div class="service-label">PRESENCIAL</div><h3>Aulas presenciais</h3><p class="solution-when"><b>Indicado quando:</b> o curso quer o professor presencialmente em aula, revisão, aulão ou evento.</p><div class="solution-price">R$ 70<small>por hora-aula</small></div><ul><li>Aula na unidade parceira</li><li>Conteúdo direcionado</li><li>Ideal para revisão e intensivo</li></ul><a class="solution-link" href="#detalhe-presencial">Ver proposta completa →</a></article><article class="solution-card"><div class="proposal-no">PROPOSTA 04</div><div class="service-label">EXCLUSIVO</div><h3>Curso exclusivo</h3><p class="solution-when"><b>Indicado quando:</b> a empresa deseja ter conteúdo de Matemática produzido especificamente para seu projeto.</p><div class="solution-price">R$ 120<small>por hora produzida</small></div><ul><li>Escopo definido em conjunto</li><li>Conteúdo por edital ou projeto</li><li>Licença de uso combinada</li></ul><a class="solution-link" href="#detalhe-exclusivo">Ver proposta completa →</a></article></div>
 <div class="detail-intro" id="detalhes"><div class="kicker">Entenda cada proposta</div><h2>O que exatamente está sendo contratado?</h2><p class="lead">Cada modalidade abaixo detalha funcionamento, entrega, indicação, informações necessárias e forma de cobrança.</p></div><div class="detail-grid"><article class="detail-card" id="detalhe-academia"><div class="detail-head"><div class="detail-tag">ACADEMIA</div><div><small>PROPOSTA 01</small><h3>Licença institucional da Academia</h3><div class="detail-price">R$ 25 por aluno • 6 meses</div></div></div><div class="detail-fields"><div class="field"><b>Como funciona</b><p>A empresa define quantos alunos terão acesso. Cada licença corresponde a um acesso individual válido por 6 meses. O preço permanece R$ 25 em qualquer quantidade.</p></div><div class="field"><b>O que o aluno recebe</b><p>Acesso à estrutura da Academia da Matemática com aulas por assunto, questões, revisões, simulados e conteúdos para concursos.</p></div><div class="field"><b>Ideal para</b><p>Cursinhos que querem complementar ou fortalecer sua oferta de Matemática com conteúdo já estruturado.</p></div><div class="field"><b>O que a empresa informa</b><p>Quantidade de alunos, período desejado e os dados necessários para ativação dos acessos.</p></div><div class="field"><b>Como é calculado</b><p>Quantidade de alunos × R$ 25. Não há quantidade mínima ou faixas de preço.</p></div><div class="field"><b>Uso comercial</b><p>O curso pode incluir o acesso como benefício ou componente de seu pacote para os alunos abrangidos pela parceria.</p></div></div><div class="example"><span>EXEMPLO</span><p><b>40 alunos:</b> 40 × R$ 25 = <strong>R$ 1.000</strong>.</p></div></article><article class="detail-card" id="detalhe-online"><div class="detail-head"><div class="detail-tag">ONLINE</div><div><small>PROPOSTA 02</small><h3>Aulas ao vivo online</h3><div class="detail-price">R$ 80 por hora</div></div></div><div class="detail-fields"><div class="field"><b>Como funciona</b><p>O curso contrata uma quantidade de horas de aula online com o Prof. Lucas MPC, em encontro único ou sequência de aulas.</p></div><div class="field"><b>O que pode ser trabalhado</b><p>Revisão, resolução de questões, assuntos do edital, simulados comentados e intensivos pré-prova.</p></div><div class="field"><b>Ideal para</b><p>Turmas que precisam acrescentar Matemática de forma rápida e flexível.</p></div><div class="field"><b>O que a empresa informa</b><p>Concurso, banca, assuntos, datas, carga horária e perfil da turma.</p></div><div class="field"><b>Entrega</b><p>Aula online ao vivo conforme cronograma combinado. Uso de gravação deve respeitar as condições definidas na parceria.</p></div><div class="field"><b>Como é calculado</b><p>Quantidade de horas × R$ 80.</p></div></div><div class="example"><span>EXEMPLO</span><p><b>6 horas online:</b> 6 × R$ 80 = <strong>R$ 480</strong>.</p></div></article><article class="detail-card" id="detalhe-presencial"><div class="detail-head"><div class="detail-tag">PRESENCIAL</div><div><small>PROPOSTA 03</small><h3>Aulas presenciais</h3><div class="detail-price">R$ 70 por hora-aula</div></div></div><div class="detail-fields"><div class="field"><b>Como funciona</b><p>O Prof. Lucas MPC ministra a aula na unidade, sala ou evento indicado pelo cursinho, conforme agenda e localização.</p></div><div class="field"><b>Formatos possíveis</b><p>Aula regular, revisão final, intensivo, aulão, questões, plantão de dúvidas ou encontro especial.</p></div><div class="field"><b>Ideal para</b><p>Turmas locais e eventos em que a presença física do professor agrega valor à experiência.</p></div><div class="field"><b>O que a empresa informa</b><p>Endereço, data, horário, duração, concurso, conteúdo e estrutura disponível.</p></div><div class="field"><b>Deslocamento</b><p>Estacionamento, pedágio, viagem ou deslocamento extraordinário, quando houver, é combinado previamente.</p></div><div class="field"><b>Como é calculado</b><p>Quantidade de horas-aula × R$ 70, além de despesas extraordinárias previamente aprovadas quando existirem.</p></div></div><div class="example"><span>EXEMPLO</span><p><b>Aulão de 4 horas:</b> 4 × R$ 70 = <strong>R$ 280</strong>.</p></div></article><article class="detail-card" id="detalhe-exclusivo"><div class="detail-head"><div class="detail-tag">EXCLUSIVO</div><div><small>PROPOSTA 04</small><h3>Produção de curso exclusivo</h3><div class="detail-price">R$ 120 por hora produzida</div></div></div><div class="detail-fields"><div class="field"><b>Como funciona</b><p>A empresa encomenda conteúdo de Matemática produzido especificamente para sua necessidade, por edital, banca ou projeto pedagógico.</p></div><div class="field"><b>O que pode ser produzido</b><p>Aulas gravadas, módulos, revisão por edital, resolução comentada e cursos direcionados.</p></div><div class="field"><b>Ideal para</b><p>Empresas que desejam ter conteúdo próprio de Matemática para seus alunos.</p></div><div class="field"><b>O que a empresa informa</b><p>Objetivo, edital, temas, público, carga desejada, prazo e forma de utilização.</p></div><div class="field"><b>Licença de uso</b><p>Prazo, turmas, hospedagem, divulgação e uso futuro são definidos antes do início do projeto.</p></div><div class="field"><b>Como é calculado</b><p>Quantidade de horas finais produzidas × R$ 120.</p></div></div><div class="example"><span>EXEMPLO</span><p><b>Curso com 8 horas:</b> 8 × R$ 120 = <strong>R$ 960</strong>.</p></div></article></div><div class="combine"><div><b>As propostas podem ser combinadas.</b><span>Exemplo: Academia + aulas presenciais de revisão + conteúdo exclusivo.</span></div><a href="#orcamento" class="btn primary">MONTAR ORÇAMENTO PERSONALIZADO</a></div></div></section>
 <section class="academy-section" id="academia"><div class="container"><div class="section-head"><div class="kicker">Academia da Matemática</div><h2>Uma biblioteca de Matemática pronta para seus alunos.</h2><p class="lead">Em vez de produzir do zero toda a parte de Matemática, o preparatório pode incorporar a Academia à experiência oferecida à turma.</p></div><div class="academy-box"><div class="academy-card"><h3>Licença institucional</h3><p>Cada aluno recebe acesso individual por 6 meses. A forma operacional de ativação dos acessos é definida no fechamento da parceria.</p><div class="features"><div class="feature"><b>Aulas organizadas</b><br>Conteúdo por assuntos e objetivos.</div><div class="feature"><b>Questões de concurso</b><br>Treino aplicado às provas.</div><div class="feature"><b>Revisões</b><br>Conteúdo para reta final.</div><div class="feature"><b>Simulados</b><br>Prática e consolidação.</div><div class="feature"><b>Acesso individual</b><br>Cada licença corresponde a um aluno.</div><div class="feature"><b>6 meses</b><br>Prazo da licença institucional.</div></div></div><div class="license-box"><small>PREÇO INSTITUCIONAL ÚNICO</small><div class="fixed-price">R$ 25</div><p>por aluno, com 6 meses de acesso. O valor não muda conforme a quantidade.</p><div class="price-examples"><div><span>10 alunos</span><b>R$ 250</b></div><div><span>20 alunos</span><b>R$ 500</b></div><div><span>50 alunos</span><b>R$ 1.250</b></div><div><span>100 alunos</span><b>R$ 2.500</b></div></div></div></div></div></section>
 <section class="budget-section" id="orcamento"><div class="container"><div class="budget-card"><div class="budget-head"><div><div class="kicker">Simulador comercial</div><h3>Monte uma proposta para sua turma.</h3><p>Escolha somente o que deseja contratar. O cálculo é atualizado automaticamente.</p></div><div class="budget-badge">ESTIMATIVA PERSONALIZADA</div></div><div class="identity-grid"><label>Nome do curso / empresa<input id="companyName" placeholder="Ex.: Alfa Concursos"></label><label>Turma / concurso<input id="className" placeholder="Ex.: PM-SP 2026"></label></div><div class="steps"><div class="step"><div class="step-number">1</div><div><label>Quantidade de alunos<input id="students" type="number" min="0" step="1" value="20"></label><span id="tierHint" style="display:block;margin-top:6px;color:#6e8290">Preço institucional: R$ 25 por aluno</span></div></div><div class="step"><div class="step-number">2</div><div><label>Academia da Matemática<select id="academyMode"><option value="yes" selected>Incluir Academia — R$ 25 por aluno</option><option value="no">Não incluir Academia</option></select></label></div></div><div class="step"><div class="step-number">3</div><div><label>Aulas online<select id="liveMode"><option value="no" selected>Não incluir aulas online</option><option value="yes">Incluir aulas online — R$ 80/h</option></select></label><div class="dependent" id="liveHoursWrap" style="display:none"><label>Horas online<input id="liveHours" type="number" min="1" step="1" value="1"></label><span>R$ 80 por hora realizada.</span></div></div></div><div class="step"><div class="step-number">4</div><div><label>Aulas presenciais<select id="presentialMode"><option value="no" selected>Não incluir aulas presenciais</option><option value="yes">Incluir aulas presenciais — R$ 70/h</option></select></label><div class="dependent" id="presentialHoursWrap" style="display:none"><label>Horas presenciais<input id="presentialHours" type="number" min="1" step="1" value="1"></label><span>R$ 70 por hora-aula.</span></div></div></div><div class="step"><div class="step-number">5</div><div><label>Curso exclusivo<select id="exclusiveMode"><option value="none" selected>Não incluir curso exclusivo</option><option value="hour">Incluir curso exclusivo — R$ 120/h produzida</option></select></label><div class="dependent" id="exclusiveQtyWrap" style="display:none"><label>Horas produzidas<input id="exclusiveQty" type="number" min="1" step="1" value="1"></label><span>R$ 120 por hora final produzida.</span></div></div></div></div><div class="summary"><div class="summary-title">RESUMO DA PROPOSTA</div><div class="budget-line"><div><b>Academia da Matemática</b><span id="academyLineDetail">20 alunos × R$ 25</span></div><strong id="academySubtotal">R$ 500</strong></div><div class="budget-line"><div><b>Aulas online</b><span id="liveLineDetail">Não incluídas</span></div><strong id="liveSubtotal">R$ 0</strong></div><div class="budget-line"><div><b>Aulas presenciais</b><span id="presentialLineDetail">Não incluídas</span></div><strong id="presentialSubtotal">R$ 0</strong></div><div class="budget-line"><div><b>Curso exclusivo</b><span id="exclusiveLineDetail">Não incluído</span></div><strong id="exclusiveSubtotal">R$ 0</strong></div><div class="total"><div><small>Investimento estimado</small><b id="grandTotal">R$ 500</b></div><span id="perStudent">Equivale a R$ 25 por aluno</span></div></div><div class="comparison"><h4>Quanto o curso pode economizar?</h4><div class="comparison-grid"><div class="comparison-item"><small>Professor tradicional — referência</small><b>R$ 5.200</b></div><div class="comparison-item"><small>Esta proposta</small><b id="compareTotal">R$ 500</b></div><div class="comparison-item saving"><small>ECONOMIA ESTIMADA</small><b id="compareSaving">R$ 4.700</b><span id="compareSavingPct">aprox. 90% de economia</span></div></div><div class="compare-note"><strong>Como chegamos a R$ 5.200:</strong> referência ilustrativa de professor cobrando R$ 100/h × 2 horas por semana × aproximadamente 26 semanas. A comparação serve para visualizar a diferença de custo; os formatos de serviço não são idênticos.</div></div><div class="budget-actions"><a class="btn primary" id="budgetWa" target="_blank">CONVERSAR SOBRE ESTE ORÇAMENTO</a><button class="btn dark-btn" id="printBudget" type="button">SALVAR / IMPRIMIR</button><button class="btn ghost-btn" id="resetBudget" type="button">LIMPAR SIMULAÇÃO</button></div></div></div></section>
