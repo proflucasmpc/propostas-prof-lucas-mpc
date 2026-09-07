@@ -1,0 +1,209 @@
+name: Apply B2B benefits and proposal colors
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/apply-b2b-benefits.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply-improvements:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Apply approved B2B improvements
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          path = Path('index.html')
+          html = path.read_text(encoding='utf-8')
+          marker = '/* B2B_BENEFITS_AND_COLORS_2026 */'
+
+          if marker in html:
+              print('Improvements already applied.')
+              raise SystemExit(0)
+
+          old_benefit = 'Mais estrutura para o aluno. Mais flexibilidade para o curso. Menos complexidade para começar.'
+          new_benefit = 'Melhore a entrega ao aluno, fortaleça o resultado da turma e aumente o potencial de rentabilidade do seu curso — sem precisar montar uma nova estrutura de Matemática.'
+          if old_benefit in html:
+              html = html.replace(old_benefit, new_benefit, 1)
+
+          checklist = '''<div class="hero-checklist" aria-label="Benefícios para o curso">
+            <div class="hero-check-item"><span class="hero-check">✓</span><div><b>Mais praticidade</b><small>Matemática pronta sem montar uma estrutura do zero.</small></div></div>
+            <div class="hero-check-item"><span class="hero-check">✓</span><div><b>Mais economia</b><small>Reduza o custo para oferecer Matemática à sua turma.</small></div></div>
+            <div class="hero-check-item"><span class="hero-check">✓</span><div><b>Mais margem e potencial de lucro</b><small>Eleve o valor entregue sem aumentar os custos na mesma proporção.</small></div></div>
+            <div class="hero-check-item"><span class="hero-check">✓</span><div><b>Mais valor percebido</b><small>Fortaleça a proposta do curso aos olhos dos seus alunos.</small></div></div>
+            <div class="hero-check-item"><span class="hero-check">✓</span><div><b>Mais preparo para aprovações</b><small>Reforce a preparação com aulas, questões, revisões e conteúdo direcionado.</small></div></div>
+            <div class="hero-check-item"><span class="hero-check">✓</span><div><b>Mais flexibilidade</b><small>Comece pequeno e amplie a parceria conforme a demanda.</small></div></div>
+            <div class="hero-check-item"><span class="hero-check">✓</span><div><b>Mais diferencial competitivo</b><small>Ofereça uma estrutura de Matemática capaz de valorizar sua preparação.</small></div></div>
+          </div>'''
+
+          pattern = r'<div class="proof-chips">[\s\S]*?</div><div class="ctas">'
+          replacement = checklist + '<div class="ctas">'
+          html, changed = re.subn(pattern, replacement, html, count=1)
+          if changed != 1:
+              raise RuntimeError('Could not replace hero proof chips with benefit checklist.')
+
+          html = html.replace(
+              '<h2>Escolha uma solução ou combine várias.</h2><p class="lead">O cursinho não precisa contratar um pacote fechado. A parceria pode começar pelo formato que faça sentido para a turma atual.</p>',
+              '<h2>Quatro formas de levar Matemática para sua operação.</h2><p class="lead">Contrate uma solução isoladamente ou combine formatos. A parceria pode começar pequena e crescer junto com a demanda da sua turma.</p>',
+              1
+          )
+
+          css = r'''
+          /* B2B_BENEFITS_AND_COLORS_2026 */
+
+          /* Checklist de benefícios empresariais na primeira dobra */
+          .hero-checklist{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:9px 12px;
+            margin:20px 0 4px;
+            max-width:780px
+          }
+          .hero-check-item{
+            display:flex;
+            align-items:flex-start;
+            gap:10px;
+            padding:11px 12px;
+            border:1px solid #DCE5EF;
+            border-radius:13px;
+            background:rgba(255,255,255,.92);
+            box-shadow:0 6px 18px rgba(31,62,96,.035)
+          }
+          .hero-check-item:last-child{grid-column:1/-1}
+          .hero-check{
+            flex:0 0 25px;
+            width:25px;
+            height:25px;
+            border-radius:50%;
+            display:grid;
+            place-items:center;
+            background:#EAF7F1;
+            color:#178A5B;
+            font-size:.82rem;
+            font-weight:1000;
+            margin-top:1px
+          }
+          .hero-check-item b{
+            display:block;
+            color:#10233F;
+            font-size:.83rem;
+            line-height:1.35;
+            margin-bottom:2px
+          }
+          .hero-check-item small{
+            display:block;
+            color:#5A6D82;
+            font-size:.72rem;
+            line-height:1.42
+          }
+          .hero-benefit-line{
+            max-width:770px;
+            color:#334B65 !important;
+            font-weight:760 !important;
+            line-height:1.55
+          }
+
+          /* Identidade cromática das quatro propostas */
+          .solution-card:nth-child(1),.detail-card:nth-child(1){--proposal-accent:#2F6BFF;--proposal-soft:#F2F6FF;--proposal-border:#C8D9FF}
+          .solution-card:nth-child(2),.detail-card:nth-child(2){--proposal-accent:#008FB5;--proposal-soft:#EFFBFD;--proposal-border:#BCE8F1}
+          .solution-card:nth-child(3),.detail-card:nth-child(3){--proposal-accent:#1E9E68;--proposal-soft:#F0FAF5;--proposal-border:#C5E7D6}
+          .solution-card:nth-child(4),.detail-card:nth-child(4){--proposal-accent:#7656C9;--proposal-soft:#F6F2FF;--proposal-border:#DCCFFA}
+
+          .solution-card{
+            min-height:0 !important;
+            background:linear-gradient(180deg,var(--proposal-soft) 0%,#FFFFFF 58%) !important;
+            border:1px solid var(--proposal-border) !important;
+            border-top:4px solid var(--proposal-accent) !important;
+            box-shadow:0 10px 28px rgba(31,62,96,.055) !important
+          }
+          .solution-when{min-height:0 !important;margin-bottom:10px !important}
+          .solution-card .service-label{
+            color:var(--proposal-accent) !important;
+            background:var(--proposal-soft) !important;
+            border-color:var(--proposal-border) !important
+          }
+          .solution-card .solution-price,
+          .solution-card .solution-link{color:var(--proposal-accent) !important}
+          .solution-card .solution-price{margin-top:3px !important}
+          .solution-card ul{margin-bottom:10px !important}
+          .solution-card .solution-link{margin-top:8px !important}
+
+          .detail-card{
+            background:linear-gradient(180deg,var(--proposal-soft) 0%,#FFFFFF 38%) !important;
+            border-color:var(--proposal-border) !important;
+            border-top:4px solid var(--proposal-accent) !important
+          }
+          .detail-card .detail-tag{
+            background:var(--proposal-accent) !important;
+            color:#fff !important
+          }
+          .detail-card .detail-price{color:var(--proposal-accent) !important}
+          .detail-card .example{
+            background:var(--proposal-soft) !important;
+            border-color:var(--proposal-border) !important
+          }
+          .detail-card .example span{color:var(--proposal-accent) !important}
+
+          /* Mesma linguagem cromática dentro do simulador */
+          .step:nth-child(2){--step-accent:#2F6BFF;--step-soft:#F2F6FF;--step-border:#C8D9FF}
+          .step:nth-child(3){--step-accent:#008FB5;--step-soft:#EFFBFD;--step-border:#BCE8F1}
+          .step:nth-child(4){--step-accent:#1E9E68;--step-soft:#F0FAF5;--step-border:#C5E7D6}
+          .step:nth-child(5){--step-accent:#7656C9;--step-soft:#F6F2FF;--step-border:#DCCFFA}
+          .step:nth-child(n+2){
+            border-color:var(--step-border) !important;
+            border-left:4px solid var(--step-accent) !important;
+            background:linear-gradient(90deg,var(--step-soft),#F8FAFB 32%) !important
+          }
+          .step:nth-child(n+2) .step-number{background:var(--step-accent) !important}
+
+          .summary .budget-line{position:relative;padding-left:14px !important}
+          .summary .budget-line::before{
+            content:"";
+            position:absolute;
+            left:0;
+            top:10px;
+            bottom:10px;
+            width:4px;
+            border-radius:999px;
+            background:#7890A5
+          }
+          .summary .budget-line:has(#academySubtotal)::before{background:#2F6BFF}
+          .summary .budget-line:has(#liveSubtotal)::before{background:#008FB5}
+          .summary .budget-line:has(#presentialSubtotal)::before{background:#1E9E68}
+          .summary .budget-line:has(#exclusiveSubtotal)::before{background:#7656C9}
+
+          @media(max-width:700px){
+            .hero-checklist{grid-template-columns:1fr}
+            .hero-check-item:last-child{grid-column:auto}
+          }
+          '''
+
+          if '</style>' not in html:
+              raise RuntimeError('Closing style tag not found.')
+          html = html.replace('</style>', css + '\n</style>', 1)
+
+          path.write_text(html, encoding='utf-8')
+          print('Checklist, benefit messaging and proposal colors applied.')
+
+      - name: Commit updated page
+        run: |
+          if git diff --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Melhora beneficios B2B e diferencia propostas por cor"
+          git push
