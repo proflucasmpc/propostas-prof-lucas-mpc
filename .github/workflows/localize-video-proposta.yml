@@ -1,4 +1,4 @@
-name: Hospedar vídeo da proposta no próprio site
+name: Usar vídeos locais na página de propostas
 
 on:
   push:
@@ -18,24 +18,17 @@ jobs:
         with:
           ref: main
 
-      - name: Instalar yt-dlp
+      - name: Validar arquivos enviados
         run: |
-          python -m pip install --upgrade pip yt-dlp
+          test -f video-proposta-web.mp4
+          test -f VSL_Prof_Lucas_MPC_45s.mp4
 
-      - name: Baixar o vídeo da proposta
+      - name: Criar capas locais
         run: |
-          yt-dlp \
-            -f "bv*[height<=1080]+ba/b[height<=1080]" \
-            --merge-output-format mp4 \
-            -o "video-proposta-prof-lucas-mpc.%(ext)s" \
-            "https://youtu.be/gfKk3NoTEcE"
-          test -f video-proposta-prof-lucas-mpc.mp4
+          ffmpeg -y -ss 00:00:03 -i video-proposta-web.mp4 -frames:v 1 -q:v 3 video-proposta-poster.jpg
+          ffmpeg -y -ss 00:00:02 -i VSL_Prof_Lucas_MPC_45s.mp4 -frames:v 1 -q:v 3 vsl-45s-poster.jpg
 
-      - name: Criar capa local do vídeo
-        run: |
-          ffmpeg -y -ss 00:00:03 -i video-proposta-prof-lucas-mpc.mp4 -frames:v 1 -q:v 3 video-proposta-poster.jpg
-
-      - name: Trocar embed do YouTube por player HTML5 local
+      - name: Atualizar players da página
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -44,38 +37,63 @@ jobs:
           p = Path('index.html')
           s = p.read_text(encoding='utf-8')
 
-          # CSS: faz o player nativo ocupar o mesmo espaço do iframe.
-          if '.proposal-video-wrap video{' not in s:
-              s = s.replace(
-                  '.proposal-video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}',
-                  '.proposal-video-wrap iframe,.proposal-video-wrap video{position:absolute;inset:0;width:100%;height:100%;border:0}.proposal-video-wrap video{object-fit:contain;background:#08182d}'
-              )
+          css_marker = '/* LOCAL_VIDEO_PLAYERS_2026 */'
+          if css_marker not in s:
+              css = r'''
+          /* LOCAL_VIDEO_PLAYERS_2026 */
+          .hero-vsl-wrap{max-width:760px;margin:18px 0 20px;padding:10px;border:1px solid rgba(47,107,255,.16);border-radius:19px;background:#fff;box-shadow:0 14px 34px rgba(31,62,96,.10)}
+          .hero-vsl-wrap video{display:block;width:100%;aspect-ratio:16/9;border:0;border-radius:13px;background:#08182d;object-fit:contain}
+          .hero-vsl-caption{display:flex;align-items:center;gap:8px;padding:9px 5px 1px;color:#53657a;font-size:.76rem;font-weight:850}
+          .hero-vsl-dot{width:8px;height:8px;border-radius:50%;background:#2f6bff;box-shadow:0 0 0 4px rgba(47,107,255,.10)}
+          .proposal-video-wrap video{position:absolute;inset:0;width:100%;height:100%;border:0;object-fit:contain;background:#08182d}
+          @media(max-width:700px){.hero-vsl-wrap{margin:15px 0 18px;padding:7px;border-radius:15px}.hero-vsl-wrap video{border-radius:10px}.hero-vsl-caption{font-size:.71rem;padding:8px 4px 1px}}
+          '''
+              if '</style>' not in s:
+                  raise RuntimeError('Não encontrei </style>.')
+              s = s.replace('</style>', css + '\n</style>', 1)
 
-          pattern = re.compile(r'''<iframe\s+src="https://www\.youtube-nocookie\.com/embed/gfKk3NoTEcE\?rel=0".*?</iframe>''', re.S)
-          replacement = '''<video controls preload="metadata" playsinline poster="video-proposta-poster.jpg" aria-label="Proposta de parceria em Matemática — Prof. Lucas MPC">
-                    <source src="video-proposta-prof-lucas-mpc.mp4" type="video/mp4">
+          hero_marker = '<!-- HERO_VSL_45S_2026 -->'
+          if hero_marker not in s:
+              hero_html = r'''
+          <!-- HERO_VSL_45S_2026 -->
+          <div class="hero-vsl-wrap">
+            <video controls preload="metadata" playsinline poster="vsl-45s-poster.jpg" aria-label="Apresentação rápida das parcerias em Matemática com o Prof. Lucas MPC">
+              <source src="VSL_Prof_Lucas_MPC_45s.mp4" type="video/mp4">
+              Seu navegador não suporta reprodução de vídeo em HTML5.
+            </video>
+            <div class="hero-vsl-caption"><span class="hero-vsl-dot"></span>Apresentação rápida da parceria • 45 segundos</div>
+          </div>
+          '''
+              # Insere imediatamente depois do H1 principal.
+              pat_h1 = re.compile(r'(<h1>\s*Ofereça Matemática completa aos seus alunos.*?</h1>)', re.I | re.S)
+              s, n = pat_h1.subn(r'\1' + hero_html, s, count=1)
+              if n == 0:
+                  raise RuntimeError('Não encontrei o título principal para inserir a VSL de 45s.')
+
+          # Substitui somente o player longo do YouTube pelo MP4 local.
+          iframe_pat = re.compile(r'<iframe\s+src="https://www\.youtube-nocookie\.com/embed/gfKk3NoTEcE\?rel=0".*?</iframe>', re.S)
+          local_long = '''<video controls preload="metadata" playsinline poster="video-proposta-poster.jpg" aria-label="Proposta de parceria em Matemática — Prof. Lucas MPC">
+                    <source src="video-proposta-web.mp4" type="video/mp4">
                     Seu navegador não suporta reprodução de vídeo em HTML5.
                   </video>'''
-
-          s2, n = pattern.subn(replacement, s, count=1)
+          s2, n = iframe_pat.subn(local_long, s, count=1)
           if n == 0:
-              # Idempotência: se o player local já estiver presente, apenas mantém.
-              if 'video-proposta-prof-lucas-mpc.mp4' not in s:
-                  raise RuntimeError('Não encontrei o iframe do vídeo para substituir.')
+              if 'src="video-proposta-web.mp4"' not in s:
+                  raise RuntimeError('Não encontrei o player do YouTube para substituir.')
               s2 = s
 
           p.write_text(s2, encoding='utf-8')
-          print('Player local configurado.')
+          print('VSL de 45s inserida e vídeo longo convertido para player local.')
           PY
 
-      - name: Commitar vídeo, capa e HTML
+      - name: Commitar atualização
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html video-proposta-prof-lucas-mpc.mp4 video-proposta-poster.jpg
+          git add index.html video-proposta-poster.jpg vsl-45s-poster.jpg
           if git diff --cached --quiet; then
             echo "Nenhuma alteração necessária."
             exit 0
           fi
-          git commit -m "Serve vídeo da proposta diretamente pelo Netlify"
+          git commit -m "Usa vídeos locais e adiciona VSL de 45 segundos"
           git push origin main
