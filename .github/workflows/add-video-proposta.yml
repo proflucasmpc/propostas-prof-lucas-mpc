@@ -1,0 +1,101 @@
+name: Inserir vídeo da proposta B2B
+
+on:
+  push:
+    paths:
+      - '.github/workflows/add-video-proposta.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-page:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Inserir seção de vídeo
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          marker = '<!-- B2B_VIDEO_PROPOSTA_2026 -->'
+
+          if marker in s:
+              print('Seção de vídeo já existe. Nada a fazer.')
+              raise SystemExit(0)
+
+          css = r'''
+          /* B2B_VIDEO_PROPOSTA_2026 */
+          .proposal-video-section{padding:46px 0 54px;background:#fff}
+          .proposal-video-shell{max-width:1030px;margin:0 auto;padding:27px;border:1px solid #dce5ef;border-radius:24px;background:linear-gradient(145deg,#ffffff,#f7f9fc);box-shadow:0 18px 48px rgba(31,62,96,.09)}
+          .proposal-video-head{text-align:center;max-width:780px;margin:0 auto 20px}
+          .proposal-video-head .kicker{color:#2f6bff}
+          .proposal-video-head h2{color:#10233f;margin-top:7px}
+          .proposal-video-head p{margin:0;color:#5b6e82;font-size:.96rem;line-height:1.7}
+          .proposal-video-wrap{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;border-radius:17px;background:#08182d;box-shadow:0 16px 36px rgba(16,35,63,.16)}
+          .proposal-video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+          .proposal-video-foot{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-top:17px;padding:14px 16px;border-radius:13px;background:#eef4ff;border:1px solid #d2e0fb;color:#334f71}
+          .proposal-video-foot span{font-size:.82rem;line-height:1.55}
+          .proposal-video-foot a{flex:0 0 auto;padding:10px 14px;border-radius:10px;background:#2f6bff;color:#fff;font-size:.78rem;font-weight:950}
+          @media(max-width:700px){.proposal-video-section{padding:31px 0 38px}.proposal-video-shell{padding:14px;border-radius:18px}.proposal-video-wrap{border-radius:12px}.proposal-video-foot{align-items:stretch;flex-direction:column}.proposal-video-foot a{text-align:center}}
+          '''
+
+          html = r'''
+          <!-- B2B_VIDEO_PROPOSTA_2026 -->
+          <section class="proposal-video-section" id="video-proposta">
+            <div class="container">
+              <div class="proposal-video-shell">
+                <div class="proposal-video-head">
+                  <div class="kicker">Apresentação da parceria</div>
+                  <h2>Conheça a proposta em vídeo.</h2>
+                  <p>Em cerca de 6 minutos, veja como funcionam as quatro modalidades de parceria, os valores e as principais vantagens para o seu curso preparatório.</p>
+                </div>
+                <div class="proposal-video-wrap">
+                  <iframe
+                    src="https://www.youtube-nocookie.com/embed/gfKk3NoTEcE?rel=0"
+                    title="Proposta de parceria em Matemática — Prof. Lucas MPC"
+                    loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    allowfullscreen></iframe>
+                </div>
+                <div class="proposal-video-foot">
+                  <span>Depois do vídeo, conheça cada modalidade em detalhes ou monte uma estimativa personalizada no simulador de orçamento.</span>
+                  <a href="#solucoes">VER AS 4 PROPOSTAS</a>
+                </div>
+              </div>
+            </div>
+          </section>
+          '''
+
+          if '</style>' not in s:
+              raise RuntimeError('Não encontrei </style> no index.html')
+          s = s.replace('</style>', css + '\n</style>', 1)
+
+          anchor = '<section class="solutions" id="solucoes">'
+          if anchor not in s:
+              raise RuntimeError('Não encontrei a seção de soluções no index.html')
+          s = s.replace(anchor, html + '\n' + anchor, 1)
+
+          p.write_text(s, encoding='utf-8')
+          print('Seção de vídeo inserida com sucesso.')
+          PY
+
+      - name: Commit da atualização
+        run: |
+          if git diff --quiet; then
+            echo "Nenhuma alteração necessária."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Insere vídeo institucional da proposta B2B"
+          git push origin main
