@@ -1,0 +1,81 @@
+name: Hospedar vídeo da proposta no próprio site
+
+on:
+  push:
+    paths:
+      - '.github/workflows/localize-video-proposta.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  localize-video:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Instalar yt-dlp
+        run: |
+          python -m pip install --upgrade pip yt-dlp
+
+      - name: Baixar o vídeo da proposta
+        run: |
+          yt-dlp \
+            -f "bv*[height<=1080]+ba/b[height<=1080]" \
+            --merge-output-format mp4 \
+            -o "video-proposta-prof-lucas-mpc.%(ext)s" \
+            "https://youtu.be/gfKk3NoTEcE"
+          test -f video-proposta-prof-lucas-mpc.mp4
+
+      - name: Criar capa local do vídeo
+        run: |
+          ffmpeg -y -ss 00:00:03 -i video-proposta-prof-lucas-mpc.mp4 -frames:v 1 -q:v 3 video-proposta-poster.jpg
+
+      - name: Trocar embed do YouTube por player HTML5 local
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+
+          # CSS: faz o player nativo ocupar o mesmo espaço do iframe.
+          if '.proposal-video-wrap video{' not in s:
+              s = s.replace(
+                  '.proposal-video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}',
+                  '.proposal-video-wrap iframe,.proposal-video-wrap video{position:absolute;inset:0;width:100%;height:100%;border:0}.proposal-video-wrap video{object-fit:contain;background:#08182d}'
+              )
+
+          pattern = re.compile(r'''<iframe\s+src="https://www\.youtube-nocookie\.com/embed/gfKk3NoTEcE\?rel=0".*?</iframe>''', re.S)
+          replacement = '''<video controls preload="metadata" playsinline poster="video-proposta-poster.jpg" aria-label="Proposta de parceria em Matemática — Prof. Lucas MPC">
+                    <source src="video-proposta-prof-lucas-mpc.mp4" type="video/mp4">
+                    Seu navegador não suporta reprodução de vídeo em HTML5.
+                  </video>'''
+
+          s2, n = pattern.subn(replacement, s, count=1)
+          if n == 0:
+              # Idempotência: se o player local já estiver presente, apenas mantém.
+              if 'video-proposta-prof-lucas-mpc.mp4' not in s:
+                  raise RuntimeError('Não encontrei o iframe do vídeo para substituir.')
+              s2 = s
+
+          p.write_text(s2, encoding='utf-8')
+          print('Player local configurado.')
+          PY
+
+      - name: Commitar vídeo, capa e HTML
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html video-proposta-prof-lucas-mpc.mp4 video-proposta-poster.jpg
+          if git diff --cached --quiet; then
+            echo "Nenhuma alteração necessária."
+            exit 0
+          fi
+          git commit -m "Serve vídeo da proposta diretamente pelo Netlify"
+          git push origin main
