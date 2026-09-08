@@ -23,6 +23,11 @@ jobs:
           test -f video-proposta-web.mp4
           test -f VSL_Prof_Lucas_MPC_45s.mp4
 
+      - name: Instalar FFmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+
       - name: Criar capas locais
         run: |
           ffmpeg -y -ss 00:00:03 -i video-proposta-web.mp4 -frames:v 1 -q:v 3 video-proposta-poster.jpg
@@ -64,13 +69,11 @@ jobs:
             <div class="hero-vsl-caption"><span class="hero-vsl-dot"></span>Apresentação rápida da parceria • 45 segundos</div>
           </div>
           '''
-              # Insere imediatamente depois do H1 principal.
               pat_h1 = re.compile(r'(<h1>\s*Ofereça Matemática completa aos seus alunos.*?</h1>)', re.I | re.S)
               s, n = pat_h1.subn(r'\1' + hero_html, s, count=1)
               if n == 0:
                   raise RuntimeError('Não encontrei o título principal para inserir a VSL de 45s.')
 
-          # Substitui somente o player longo do YouTube pelo MP4 local.
           iframe_pat = re.compile(r'<iframe\s+src="https://www\.youtube-nocookie\.com/embed/gfKk3NoTEcE\?rel=0".*?</iframe>', re.S)
           local_long = '''<video controls preload="metadata" playsinline poster="video-proposta-poster.jpg" aria-label="Proposta de parceria em Matemática — Prof. Lucas MPC">
                     <source src="video-proposta-web.mp4" type="video/mp4">
